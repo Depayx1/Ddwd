@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Video Downloader with Resolution</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    async function fetchFormats() {
+      const url = document.getElementById('url').value;
+      const formSelect = document.getElementById('format');
+      formSelect.innerHTML = '<option>Loading...</option>';
+
+      const response = await fetch('get_formats.php?url=' + encodeURIComponent(url));
+      const formats = await response.json();
+
+      formSelect.innerHTML = '';
+      formats.forEach(f => {
+        const option = document.createElement('option');
+        option.value = f.format_id;
+        option.text = f.ext + ' - ' + f.resolution + ' - ' + f.filesize;
+        formSelect.appendChild(option);
+      });
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h2>Universal Video Downloader</h2>
+    <form action="download.php" method="POST">
+      <input type="text" name="url" id="url" placeholder="Masukkan URL YouTube / TikTok / IG" required>
+      <button type="button" onclick="fetchFormats()">Ambil Resolusi</button><br><br>
+      <select name="format_id" id="format" required>
+        <option>Pilih resolusi...</option>
+      </select><br><br>
+      <button type="submit">Download</button>
+    </form>
+  </div>
+</body>
+</html>
